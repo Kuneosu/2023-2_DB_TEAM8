@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
@@ -39,6 +40,21 @@ public class mainFrame extends JFrame {
 	 */
 	public mainFrame( ) {
 		
+		int total_case = 0;
+		double win_rate = 0;
+		int count_lawyer = 0;
+
+		try {
+			DB_LAW law = new DB_LAW();
+			mainResult result = law.mainSql();
+			total_case = result.getTotalCase();
+			win_rate = result.getWinRate();
+			count_lawyer = result.getCountLawyer();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
@@ -53,22 +69,22 @@ public class mainFrame extends JFrame {
 		companyName.setBounds(35, 32, 479, 123);
 		contentPane.add(companyName);
 		
-		JLabel lawyerCount = new JLabel("상담 가능 변호사 : XX");
+		JLabel lawyerCount = new JLabel("상담 가능 변호사 수 : "+count_lawyer);
 		lawyerCount.setFont(new Font("배달의민족 도현", Font.PLAIN, 28));
 		lawyerCount.setBounds(35, 165, 446, 38);
 		contentPane.add(lawyerCount);
 		
-		JLabel caseCount = new JLabel("진행중인 사건 : XX");
+		JLabel caseCount = new JLabel("진행중인 사건 수 : "+total_case);
 		caseCount.setFont(new Font("배달의민족 도현", Font.PLAIN, 28));
 		caseCount.setBounds(35, 213, 446, 38);
 		contentPane.add(caseCount);
 		
-		JLabel entireWinrate = new JLabel("사건 전체  승률 : XX");
+		JLabel entireWinrate = new JLabel("사건 전체  승률 : "+win_rate+" %");
 		entireWinrate.setFont(new Font("배달의민족 도현", Font.PLAIN, 28));
 		entireWinrate.setBounds(35, 261, 446, 38);
 		contentPane.add(entireWinrate);
 		
-		JLabel whoText = new JLabel("Who are you ?");
+		JLabel whoText = new JLabel("사용자 유형 선택");
 		whoText.setFont(new Font("배달의민족 도현", Font.PLAIN, 32));
 		whoText.setBounds(35, 359, 446, 38);
 		contentPane.add(whoText);

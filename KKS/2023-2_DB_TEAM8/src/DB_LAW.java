@@ -1,11 +1,11 @@
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import oracle.jdbc.OracleTypes;
 
 public class DB_LAW {
    Connection con = null;
@@ -46,6 +46,90 @@ public class DB_LAW {
     } catch (SQLException e) { e.printStackTrace(); 
     } finally {   con.close(); }
     
+   }
+   
+   public mainResult mainSql() throws SQLException{
+	   mainResult result = new mainResult();
+	   try{	DB_Connect();
+			CallableStatement cs = con.prepareCall("{call CALC_STATUS(?,?,?)}");
+			cs.registerOutParameter(1,Types.INTEGER);
+			cs.registerOutParameter(2,Types.DOUBLE);
+			cs.registerOutParameter(3,Types.INTEGER);
+			
+			cs.execute();
+		
+			result.setTotalCase(cs.getInt(1));
+			result.setWinRate(cs.getDouble(2));
+			result.setCountLawyer(cs.getInt(3));
+			
+			System.out.print("\t" + result.getTotalCase());
+            System.out.print("\t" + result.getWinRate());
+            System.out.print("\t" + result.getCountLawyer());
+	   }catch(SQLException e) {
+		   e.printStackTrace();
+	   }
+	   
+	   return result;
+   }
+   
+   public String checkLawyer(String lawyer_name) throws SQLException{
+	   String lawyer_number="null";
+	   String sql = "SELECT 변호사번호 FROM 변호사 WHERE 이름=(?)";
+	   try {DB_Connect();
+	   		PreparedStatement preparedStatement = con.prepareStatement(sql);
+	   		preparedStatement.setString(1, lawyer_name);
+	   		
+	   		ResultSet rs = preparedStatement.executeQuery();
+	   		
+	   		if(rs.next()) {
+	   			lawyer_number = rs.getString("변호사번호");
+	   		}else {
+	   			lawyer_number = "존재하지 않는 변호사";
+	   		}
+	   		rs.close(); preparedStatement.close();
+	   }catch(SQLException e) {
+		   e.printStackTrace();
+	   }
+	   
+	   return lawyer_number;
+   }
+   
+   public String checkCustomer(String customer_name) throws SQLException{
+	   String customer_number="null";
+	   String sql = "SELECT 고객번호 FROM 고객 WHERE 이름=(?)";
+	   try {DB_Connect();
+	   		PreparedStatement preparedStatement = con.prepareStatement(sql);
+	   		preparedStatement.setString(1, customer_name);
+	   		
+	   		ResultSet rs = preparedStatement.executeQuery();
+	   		
+	   		if(rs.next()) {
+	   			customer_number = rs.getString("고객번호");
+	   		}else {
+	   			customer_number = "존재하지 않는 고객";
+	   		}
+	   		rs.close(); preparedStatement.close();
+	   }catch(SQLException e) {
+		   e.printStackTrace();
+	   }
+	   
+	   return customer_number;
+   }
+   
+   public void createCounsel(String lawyer_number,String customer_number,String counsel_genre,String counsel_body) {
+	   try {DB_Connect();
+	   		CallableStatement cs = con.prepareCall("{call CREATE_COUNSEL(?,?,?,?)}");
+		   cs.setString(1, lawyer_number);
+		   cs.setString(2, customer_number);
+		   cs.setString(3, counsel_genre);
+		   cs.setString(4, counsel_body);
+		   
+		   cs.execute();
+		   
+		   cs.close(); con.close();
+	   }catch(SQLException e) {
+		   e.printStackTrace();
+	   }
    }
 
 public static void main(String arg[]) throws SQLException {
