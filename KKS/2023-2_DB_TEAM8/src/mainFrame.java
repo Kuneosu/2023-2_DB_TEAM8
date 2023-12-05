@@ -64,7 +64,7 @@ public class mainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel companyName = new JLabel("JDK 법률회사");
+		JLabel companyName = new JLabel("DB_8 법률회사");
 		companyName.setFont(new Font("배달의민족 도현", Font.BOLD, 56));
 		companyName.setBounds(35, 32, 479, 123);
 		contentPane.add(companyName);

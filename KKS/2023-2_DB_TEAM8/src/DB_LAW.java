@@ -83,6 +83,7 @@ public class DB_LAW {
 	   		
 	   		if(rs.next()) {
 	   			lawyer_number = rs.getString("변호사번호");
+	   			System.out.println("변호사 정보 확인 완료");
 	   		}else {
 	   			lawyer_number = "존재하지 않는 변호사";
 	   		}
@@ -105,6 +106,7 @@ public class DB_LAW {
 	   		
 	   		if(rs.next()) {
 	   			customer_number = rs.getString("고객번호");
+	   			System.out.println("고객 정보 확인 완료");
 	   		}else {
 	   			customer_number = "존재하지 않는 고객";
 	   		}
@@ -125,6 +127,8 @@ public class DB_LAW {
 		   cs.setString(4, counsel_body);
 		   
 		   cs.execute();
+		   
+		   System.out.println("상담 데이터 삽입 완료");
 		   
 		   cs.close(); con.close();
 	   }catch(SQLException e) {
